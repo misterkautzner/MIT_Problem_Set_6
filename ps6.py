@@ -1,7 +1,7 @@
 # Problem Set 6: Simulating robots
-# Name:
-# Collaborators:
-# Time:
+# Name: John Kautzner
+# Collaborators: None
+# Time: 0:45
 
 import math
 import random
@@ -66,7 +66,10 @@ class RectangularRoom(object):
         width: an integer > 0
         height: an integer > 0
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        self.width = width
+        self.height = height
+        self.clean = []
     
     def cleanTileAtPosition(self, pos):
         """
@@ -76,7 +79,9 @@ class RectangularRoom(object):
 
         pos: a Position
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        tile = (int(math.floor(pos[0])), int(math.floor(pos[1])))
+        self.clean += [tile]
 
     def isTileCleaned(self, m, n):
         """
@@ -88,7 +93,10 @@ class RectangularRoom(object):
         n: an integer
         returns: True if (m, n) is cleaned, False otherwise
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        if (m, n) in self.clean:
+            return True
+        return False
     
     def getNumTiles(self):
         """
@@ -96,7 +104,8 @@ class RectangularRoom(object):
 
         returns: an integer
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        return self.width * self.height
 
     def getNumCleanedTiles(self):
         """
@@ -104,7 +113,8 @@ class RectangularRoom(object):
 
         returns: an integer
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        return len(self.clean)
 
     def getRandomPosition(self):
         """
@@ -112,7 +122,10 @@ class RectangularRoom(object):
 
         returns: a Position object.
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        randomPosition = Position(random.uniform(0.0, self.width), random.uniform(0.0, self.height))
+        return randomPosition
+
 
     def isPositionInRoom(self, pos):
         """
@@ -121,7 +134,12 @@ class RectangularRoom(object):
         pos: a Position object.
         returns: True if pos is in the room, False otherwise.
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        x = pos[0]
+        y = pos[1]
+        if 0 <= x and 0 <= y and x < self.width and y < self.height:
+            return True
+        return False
 
 
 class Robot(object):
