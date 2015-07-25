@@ -290,6 +290,8 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
     timeSteps = 0
 
     for t in range(num_trials):
+        anim = ps6_visualize.RobotVisualization(num_robots, width, height)
+
         room = RectangularRoom(width, height)
 
         robot = [robot_type(room, speed) for i in range(num_robots)]
@@ -298,9 +300,13 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
          #   robot[i] = robot_type(room, speed)
 
         while(room.getNumCleanedTiles() < min_coverage * room.getNumTiles()):
+            anim.update(room, robot)
+
             for i in range(num_robots):
                 robot[i].updatePositionAndClean()
             timeSteps += 1
+
+        anim.done()
 
     return timeSteps/(num_trials + 0.0)
 
@@ -310,7 +316,7 @@ for num_robots in range(1, 2):
     width = 20
     height = 20
     min_coverage = 1
-    num_trials = 20
+    num_trials = 1
     robot_type = StandardRobot
     print "average timeSteps = ", runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
 
