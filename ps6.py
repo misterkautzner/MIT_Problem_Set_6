@@ -2,13 +2,14 @@
 # Problem Set 6: Simulating robots
 # Name: John Kautzner
 # Collaborators: None
-# Time: 4:00
+# Time: 5:00
 
 import math
 import random
 
 import ps6_visualize
 import pylab
+import numpy
 
 # === Provided classes
 
@@ -290,7 +291,7 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
     timeSteps = 0
 
     for t in range(num_trials):
-        anim = ps6_visualize.RobotVisualization(num_robots, width, height)
+        #anim = ps6_visualize.RobotVisualization(num_robots, width, height)
 
         room = RectangularRoom(width, height)
 
@@ -300,17 +301,17 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
          #   robot[i] = robot_type(room, speed)
 
         while(room.getNumCleanedTiles() < min_coverage * room.getNumTiles()):
-            anim.update(room, robot)
+            #anim.update(room, robot)
 
             for i in range(num_robots):
                 robot[i].updatePositionAndClean()
             timeSteps += 1
 
-        anim.done()
+        #anim.done()
 
     return timeSteps/(num_trials + 0.0)
 
-for num_robots in range(1, 2):
+#for num_robots in range(10, 11):
     print num_robots, "robots"
     speed = 1
     width = 20
@@ -331,13 +332,62 @@ def showPlot1():
     """
     Produces a plot showing dependence of cleaning time on number of robots.
     """ 
-    raise NotImplementedError
+    #raise NotImplementedError
+
+    xValues = []
+    yValues = []
+
+    for num_robots in range(1, 11):
+        xValues += [num_robots]
+        speed = 1
+        width = 20
+        height = 20
+        min_coverage = .8
+        num_trials = 100
+        robot_type = StandardRobot
+        y = runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
+        yValues += [y]
+
+    pylab.plot(xValues,yValues)
+
+    pylab.xlabel("Number of Robots")
+    pylab.ylabel("Time / Steps")
+    pylab.title("How long it takes 80% of a room to be cleaned by 1-10 robots")
+
+    pylab.show()
+
+#showPlot1()
+
 
 def showPlot2():
     """
     Produces a plot showing dependence of cleaning time on room shape.
     """
-    raise NotImplementedError
+    #raise NotImplementedError
+
+    xValues = []
+    yValues = []
+
+    for width in [20, 25, 40, 50, 80, 100]:
+        xValues += [width]
+        height = 400/width
+        speed = 1
+        num_robots = 2
+        min_coverage = .8
+        num_trials = 100
+        robot_type = StandardRobot
+        y = runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
+        yValues += [y]
+
+    pylab.plot(xValues, yValues)
+
+    pylab.xlabel("Widths")
+    pylab.ylabel("Time / Steps")
+    pylab.title("How Long it Takes Two Robots to Clean 80% of Rooms With Area of 400 Units")
+
+    pylab.show()
+
+#showPlot2()
 
 # === Problem 5
 
@@ -346,7 +396,7 @@ class RandomWalkRobot(Robot):
     A RandomWalkRobot is a robot with the "random walk" movement strategy: it
     chooses a new direction at random after each time-step.
     """
-    raise NotImplementedError
+#    raise NotImplementedError
 
 
 # === Problem 6
@@ -358,4 +408,4 @@ def showPlot3():
     """
     Produces a plot comparing the two robot strategies.
     """
-    raise NotImplementedError
+#    raise NotImplementedError
