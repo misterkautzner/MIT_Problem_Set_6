@@ -1,7 +1,8 @@
+# coding=utf-8
 # Problem Set 6: Simulating robots
 # Name: John Kautzner
 # Collaborators: None
-# Time: 1:15
+# Time: 1:45
 
 import math
 import random
@@ -207,7 +208,7 @@ class Robot(object):
 
     def updatePositionAndClean(self):
         """
-        Simulate the raise passage of a single time-step.
+        Simulate the passage of a single time-step.
 
         Move the robot to a new position and mark the tile it is on as having
         been cleaned.
@@ -240,7 +241,7 @@ class StandardRobot(Robot):
         Move the robot to a new position and mark the tile it is on as having
         been cleaned.
         """
-        raise NotImplementedError
+        #raise NotImplementedError
 
 # === Problem 3
 
@@ -262,15 +263,41 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
     robot_type: class of robot to be instantiated (e.g. Robot or
                 RandomWalkRobot)
     """
-    raise NotImplementedError
+    #raise NotImplementedError
+    timeSteps = 0
 
+    for t in range(num_trials):
+        room = RectangularRoom(width, height)
+
+        robot = [robot_type(room, speed) for i in range(num_robots)]
+
+        #for i in range(num_robots):
+         #   robot[i] = robot_type(room, speed)
+
+        while(room.getNumCleanedTiles() < min_coverage * room.getNumTiles()):
+            for i in range(num_robots):
+                robot[i].updatePositionAndClean()
+            timeSteps += 1
+
+    print timeSteps/(num_trials + 0.0)
+    return timeSteps/(num_trials + 0.0)
+
+for num_robots in range(1, 3):
+    print num_robots, "robots"
+    speed = 1
+    width = 20
+    height = 20
+    min_coverage = .8
+    num_trials = 10
+    robot_type = StandardRobot
+    runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
 
 # === Problem 4
 #
-# 1) How long does it take to clean 80% of a 20×20 room with each of 1-10 robots?
+# 1) How long does it take to clean 80% of a 20Ã—20 room with each of 1-10 robots?
 #
 # 2) How long does it take two robots to clean 80% of rooms with dimensions 
-#	 20×20, 25×16, 40×10, 50×8, 80×5, and 100×4?
+#	 20Ã—20, 25Ã—16, 40Ã—10, 50Ã—8, 80Ã—5, and 100Ã—4?
 
 def showPlot1():
     """
