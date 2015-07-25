@@ -1,7 +1,7 @@
 # Problem Set 6: Simulating robots
 # Name: John Kautzner
 # Collaborators: None
-# Time: 0:45
+# Time: 1:15
 
 import math
 import random
@@ -161,7 +161,12 @@ class Robot(object):
         room:  a RectangularRoom object.
         speed: a float (speed > 0)
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        self.speed = speed
+        self.room = room
+        self.pos = room.getRandomPosition()
+        self.direc = random.randrange(0, 360, 1)
+        self.room.cleanTileAtPosition(self.pos)
 
     def getRobotPosition(self):
         """
@@ -169,7 +174,8 @@ class Robot(object):
 
         returns: a Position object giving the robot's position.
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        return self.pos
     
     def getRobotDirection(self):
         """
@@ -178,7 +184,8 @@ class Robot(object):
         returns: an integer d giving the direction of the robot as an angle in
         degrees, 0 <= d < 360.
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        return self.direc
 
     def setRobotPosition(self, position):
         """
@@ -186,7 +193,8 @@ class Robot(object):
 
         position: a Position object.
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        self.pos = position
 
     def setRobotDirection(self, direction):
         """
@@ -194,7 +202,8 @@ class Robot(object):
 
         direction: integer representing an angle in degrees
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        self.direc = direction
 
     def updatePositionAndClean(self):
         """
@@ -203,7 +212,17 @@ class Robot(object):
         Move the robot to a new position and mark the tile it is on as having
         been cleaned.
         """
-        raise NotImplementedError
+        #raise NotImplementedError
+        potentialDirec = self.direc
+        #while the new position is not in the room, change the direction until it is
+        while(not self.room.isPositionInRoom(self.pos.getNewPosition(potentialDirec, self.speed))):
+            potentialDirec = random.randrange(0, 360, 1)
+
+        #update direction and position
+        self.direc = potentialDirec
+        self.pos = self.pos.getNewPosition(self.direc, self.speed)
+        self.room.cleanTileAtPosition(self.pos)
+
 
 
 # === Problem 2
