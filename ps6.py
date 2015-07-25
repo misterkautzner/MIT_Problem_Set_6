@@ -2,7 +2,7 @@
 # Problem Set 6: Simulating robots
 # Name: John Kautzner
 # Collaborators: None
-# Time: 1:45
+# Time: 4:00
 
 import math
 import random
@@ -48,6 +48,9 @@ class Position(object):
         new_y = old_y + delta_y
         return Position(new_x, new_y)
 
+    def __str__(self):
+        print "position =", (self.getX(), self.getY())
+        return " "
 # === Problems 1
 
 class RectangularRoom(object):
@@ -81,8 +84,9 @@ class RectangularRoom(object):
         pos: a Position
         """
         #raise NotImplementedError
-        tile = (int(math.floor(pos[0])), int(math.floor(pos[1])))
-        self.clean += [tile]
+        tile = (int(math.floor(pos.getX())), int(math.floor(pos.getY())))
+        if tile not in self.clean:
+            self.clean += [tile]
 
     def isTileCleaned(self, m, n):
         """
@@ -115,7 +119,8 @@ class RectangularRoom(object):
         returns: an integer
         """
         #raise NotImplementedError
-        return len(self.clean)
+        numClean = len(self.clean)
+        return numClean
 
     def getRandomPosition(self):
         """
@@ -124,7 +129,10 @@ class RectangularRoom(object):
         returns: a Position object.
         """
         #raise NotImplementedError
-        randomPosition = Position(random.uniform(0.0, self.width), random.uniform(0.0, self.height))
+        #randomPosition = Position(random.uniform(0.0, self.width), random.uniform(0.0, self.height))
+        randx = random.uniform(0.0, self.width)
+        randy = random.uniform(0.0, self.height)
+        randomPosition = Position(randx, randy)
         return randomPosition
 
 
@@ -136,8 +144,8 @@ class RectangularRoom(object):
         returns: True if pos is in the room, False otherwise.
         """
         #raise NotImplementedError
-        x = pos[0]
-        y = pos[1]
+        x = pos.getX()
+        y = pos.getY()
         if 0 <= x and 0 <= y and x < self.width and y < self.height:
             return True
         return False
@@ -214,14 +222,17 @@ class Robot(object):
         been cleaned.
         """
         #raise NotImplementedError
-        potentialDirec = self.direc
+        potentialDirec = self.getRobotDirection()
         #while the new position is not in the room, change the direction until it is
-        while(not self.room.isPositionInRoom(self.pos.getNewPosition(potentialDirec, self.speed))):
+        pos = self.getRobotPosition()
+        potentialPos = pos.getNewPosition(potentialDirec, self.speed)
+        while(not self.room.isPositionInRoom(potentialPos)):
             potentialDirec = random.randrange(0, 360, 1)
+            potentialPos = pos.getNewPosition(potentialDirec, self.speed)
 
         #update direction and position
-        self.direc = potentialDirec
-        self.pos = self.pos.getNewPosition(self.direc, self.speed)
+        self.setRobotDirection(potentialDirec)
+        self.setRobotPosition(potentialPos)
         self.room.cleanTileAtPosition(self.pos)
 
 
@@ -242,6 +253,18 @@ class StandardRobot(Robot):
         been cleaned.
         """
         #raise NotImplementedError
+        potentialDirec = self.getRobotDirection()
+        #while the new position is not in the room, change the direction until it is
+        pos = self.getRobotPosition()
+        potentialPos = pos.getNewPosition(potentialDirec, self.speed)
+        while(not self.room.isPositionInRoom(potentialPos)):
+            potentialDirec = random.randrange(0, 360, 1)
+            potentialPos = pos.getNewPosition(potentialDirec, self.speed)
+
+        #update direction and position
+        self.setRobotDirection(potentialDirec)
+        self.setRobotPosition(potentialPos)
+        self.room.cleanTileAtPosition(self.pos)
 
 # === Problem 3
 
@@ -279,18 +302,17 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
                 robot[i].updatePositionAndClean()
             timeSteps += 1
 
-    print timeSteps/(num_trials + 0.0)
     return timeSteps/(num_trials + 0.0)
 
-for num_robots in range(1, 3):
+for num_robots in range(1, 2):
     print num_robots, "robots"
     speed = 1
     width = 20
     height = 20
-    min_coverage = .8
-    num_trials = 10
+    min_coverage = 1
+    num_trials = 20
     robot_type = StandardRobot
-    runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
+    print "average timeSteps = ", runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
 
 # === Problem 4
 #
