@@ -2,7 +2,7 @@
 # Problem Set 6: Simulating robots
 # Name: John Kautzner
 # Collaborators: None
-# Time: 5:20
+# Time: 5:40
 
 import math
 import random
@@ -418,11 +418,81 @@ def showPlot3():
     """
     Produces a plot comparing the two robot strategies.
     """
-#    raise NotImplementedError
+    #raise NotImplementedError
+
+    xValues = []
+    yStandValues = []
+    yRandValues = []
+
+    for num_robots in range(1, 11):
+        xValues += [num_robots]
+        speed = 1
+        width = 20
+        height = 20
+        min_coverage = .8
+        num_trials = 100
+
+        robot_type = StandardRobot
+        yStand = runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
+        yStandValues += [yStand]
+
+        robot_type = RandomWalkRobot
+        yRand = runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
+        yRandValues += [yRand]
 
 
+    pylab.plot(xValues,yStandValues, '-b', label = "StandardRobot")
+    pylab.plot(xValues,yRandValues, '-r', label = "RandomWalkRobot")
+    pylab.legend(loc = 'upper right')
+
+    pylab.xlabel("Number of Robots")
+    pylab.ylabel("Time / Steps")
+    pylab.title("How long it takes 80% of a room to be cleaned by 1-10 robots")
+
+    pylab.show()
+
+#showPlot3()
 
 
+def showPlot4():
+    """
+    Produces a plot comparing StandardRobots' and RandomWalkRobots' dependence of cleaning time on room shape.
+    """
+    #raise NotImplementedError
+
+    xValues = []
+    yStandValues = []
+    yRandValues = []
+
+    for width in [20, 25, 40, 50, 80, 100]:
+        xValues += [width]
+        height = 400/width
+        speed = 1
+        num_robots = 2
+        min_coverage = .8
+        num_trials = 100
+        robot_type = StandardRobot
+        yStand = runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
+        yStandValues += [yStand]
+
+        robot_type = RandomWalkRobot
+        yRand = runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
+        yRandValues += [yRand]
+
+
+    pylab.plot(xValues,yStandValues, '-b', label = "StandardRobot")
+    pylab.plot(xValues,yRandValues, '-r', label = "RandomWalkRobot")
+    pylab.legend(loc = 'upper left')
+
+    pylab.xlabel("Widths")
+    pylab.ylabel("Time / Steps")
+    pylab.title("How Long it Takes Two Robots to Clean 80% of Rooms With Area of 400 Units")
+
+    pylab.show()
+
+#showPlot4()
+
+'''
 for num_robots in range(10, 11):
     print num_robots, "robots"
     speed = 1
@@ -432,3 +502,4 @@ for num_robots in range(10, 11):
     num_trials = 100
     robot_type = RandomWalkRobot
     print "average timeSteps = ", runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
+    '''
