@@ -2,7 +2,7 @@
 # Problem Set 6: Simulating robots
 # Name: John Kautzner
 # Collaborators: None
-# Time: 5:00
+# Time: 5:20
 
 import math
 import random
@@ -223,6 +223,7 @@ class Robot(object):
         been cleaned.
         """
         #raise NotImplementedError
+        '''
         potentialDirec = self.getRobotDirection()
         #while the new position is not in the room, change the direction until it is
         pos = self.getRobotPosition()
@@ -235,6 +236,7 @@ class Robot(object):
         self.setRobotDirection(potentialDirec)
         self.setRobotPosition(potentialPos)
         self.room.cleanTileAtPosition(self.pos)
+        '''
 
 
 
@@ -311,15 +313,6 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
 
     return timeSteps/(num_trials + 0.0)
 
-#for num_robots in range(10, 11):
-    print num_robots, "robots"
-    speed = 1
-    width = 20
-    height = 20
-    min_coverage = 1
-    num_trials = 1
-    robot_type = StandardRobot
-    print "average timeSteps = ", runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
 
 # === Problem 4
 #
@@ -396,7 +389,24 @@ class RandomWalkRobot(Robot):
     A RandomWalkRobot is a robot with the "random walk" movement strategy: it
     chooses a new direction at random after each time-step.
     """
-#    raise NotImplementedError
+    #raise NotImplementedError
+
+    def updatePositionAndClean(self):
+
+        potentialDirec = random.randrange(0, 360, 1)
+
+        pos = self.getRobotPosition()
+        potentialPos = pos.getNewPosition(potentialDirec, self.speed)
+
+        #while the new position is not in the room, change the direction until it is
+        while(not self.room.isPositionInRoom(potentialPos)):
+            potentialDirec = random.randrange(0, 360, 1)
+            potentialPos = pos.getNewPosition(potentialDirec, self.speed)
+
+        #update direction and position
+        self.setRobotDirection(potentialDirec)
+        self.setRobotPosition(potentialPos)
+        self.room.cleanTileAtPosition(self.pos)
 
 
 # === Problem 6
@@ -409,3 +419,16 @@ def showPlot3():
     Produces a plot comparing the two robot strategies.
     """
 #    raise NotImplementedError
+
+
+
+
+for num_robots in range(10, 11):
+    print num_robots, "robots"
+    speed = 1
+    width = 20
+    height = 20
+    min_coverage = .75
+    num_trials = 100
+    robot_type = RandomWalkRobot
+    print "average timeSteps = ", runSimulation(num_robots, speed, width, height, min_coverage, num_trials, robot_type)
